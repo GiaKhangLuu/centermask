@@ -107,6 +107,10 @@ _C.DATASETS.PROPOSAL_FILES_TEST = ()
 # Number of top scoring precomputed proposals to keep for test
 _C.DATASETS.PRECOMPUTED_PROPOSAL_TOPK_TEST = 1000
 
+_C.DATASETS.DATASET_NAME = ""
+_C.DATASETS.IMAGE_DIR = ""
+_C.DATASETS.ANNOTATION_DIR = ""
+
 # -----------------------------------------------------------------------------
 # DataLoader
 # -----------------------------------------------------------------------------

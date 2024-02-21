@@ -25,6 +25,9 @@ MODEL:
 DATASETS:
   TRAIN: ("cityscapes_train",)
   TEST: ("cityscapes_val",)
+  DATASET_NAME: "cityscapes"
+  IMAGE_DIR: "./cityscapes"
+  ANNOTATION_DIR: './cityscapes/annotations'
 SOLVER:
   CHECKPOINT_PERIOD: 10000
   IMS_PER_BATCH: 16

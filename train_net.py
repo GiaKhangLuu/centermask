@@ -24,7 +24,10 @@ from centermask.evaluation import (
 )
 from detectron2.modeling import GeneralizedRCNNWithTTA
 from detectron2.checkpoint import DetectionCheckpointer
+from detectron2.data.datasets import register_coco_instances
 from centermask.config import get_cfg
+from detectron2.data import MetadataCatalog, DatasetCatalog
+import random
 
 
 class Trainer(DefaultTrainer):
@@ -100,8 +103,6 @@ class Trainer(DefaultTrainer):
         res = OrderedDict({k + "_TTA": v for k, v in res.items()})
         return res
 
-
-
 def setup(args):
     """
     Create configs and perform basic setups.
@@ -113,10 +114,19 @@ def setup(args):
     default_setup(cfg, args)
     return cfg
 
+def register_dataset(dataset_name_prefix, annot_dir, img_dir):
+    for split in ['train', 'val']:
+        annot_path = os.path.join(annot_dir, f'instancesonly_filtered_gtFine_{split}.json')
+        d_name = dataset_name_prefix + f'_{split}'
+        register_coco_instances(d_name, {}, annot_path, img_dir)
 
 def main(args):
     cfg = setup(args)
 
+    register_dataset(cfg.DATASETS.DATASET_NAME, 
+                     cfg.DATASETS.ANNOTATION_DIR,
+                     cfg.DATASETS.IMAGE_DIR)
+    
     if args.eval_only:
         model = Trainer.build_model(cfg)
         DetectionCheckpointer(model, save_dir=cfg.OUTPUT_DIR).resume_or_load(
@@ -144,7 +154,7 @@ def main(args):
 
 if __name__ == "__main__":
     args = default_argument_parser().parse_args()
-    print("Command Line Args:", args)
+    #print("Command Line Args:", args)
     launch(
         main,
         args.num_gpus,
